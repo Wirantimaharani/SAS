@@ -14,8 +14,6 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
 
     ![Laravel1](/assets/Laravel1.PNG)
 
-    ![Laravel1](/assets/Laravel1.PNG)
-
   - Because, we re-install the LXC of ubuntu_landing, then we need to do some configuration on ubuntu_landing. We can type `apt update; apt upgrade -y; apt install -y nano` to update and upgrade the ubuntu by **sources.list**. After that, we can set the **ip** from **dhcp** to static with same **ip** before we re-install this LXC by typing `nano /etc/netplan/10-lxc.yaml`. Save it, and type `netplan apply` to apply all the configurations we made.
 
   - We also need to configure the ssh server for this LXC. First, we need to install it by typing `apt install openssh-server` and then type `nano /etc/ssh/sshd_config` to doing some configurations below, then restart it by typing `service sshd restart`.
