@@ -14,6 +14,8 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
 
     ![Laravel1](/assets/Laravel1.PNG)
 
+    ![Laravel1](/assets/Laravel1.PNG)
+
   - Because, we re-install the LXC of ubuntu_landing, then we need to do some configuration on ubuntu_landing. We can type `apt update; apt upgrade -y; apt install -y nano` to update and upgrade the ubuntu by **sources.list**. After that, we can set the **ip** from **dhcp** to static with same **ip** before we re-install this LXC by typing `nano /etc/netplan/10-lxc.yaml`. Save it, and type `netplan apply` to apply all the configurations we made.
 
   - We also need to configure the ssh server for this LXC. First, we need to install it by typing `apt install openssh-server` and then type `nano /etc/ssh/sshd_config` to doing some configurations below, then restart it by typing `service sshd restart`.
@@ -694,42 +696,42 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
 - **WordPress**
 
   - First, we need to change the ubuntu_php7.4 from **bionic** to **focal** by typing this command `sudo lxc-create -n ubuntu_php7.4 -t download -- --dist ubuntu --release focal --arch amd64 --force-cache --no-validate --server images.linuxcontainers.org`.
-  
+
   - We can check the version of ubuntu by entering the LXC with `sudo lxc-attach -n ubuntu_php7.4` and type `lsb_release -a` to check the version of ubuntu.
-  
+
     ![wordpress1](/assets/wordpress1.PNG)
-  
+
   - Because, we re-install the LXC of ubuntu_php7.4, then we need to do some configuration on ubuntu_php7.4. We can type `apt update; apt upgrade -y; apt install -y nano` to update and upgrade the ubuntu by **sources.list**. After that, we can set the **ip** from **dhcp** to static with same **ip** before we re-install this LXC by typing `nano /etc/netplan/10-lxc.yaml`. Save it, and type `netplan apply` to apply all the configurations we made.
-  
+
   - We also need to configure the ssh server for this LXC. First, we need to install it by typing `apt install openssh-server` and then type `nano /etc/ssh/sshd_config` to doing some configurations below, then restart it by typing `service sshd restart`.
-  
+
     ```
     PermitRootLogin yes
     RSAAuthentication yes
     ```
-  
+
   - We can type `passwd` to create new password for our LXC, so we can access this LXC with ssh now. 
-  
+
   - We can also set auto start on this LXC, using the same method as the module I described before. If you want to backup this LXC, first you need to stop your LXC by typing `sudo lxc-stop -n ubuntu_php7.4` and then type this command `lxc-copy -n ubuntu_php7.4 -N ubuntu_php7.4_backup -sKD` to backup the LXC.
-  
+
   - After we do all this LXC configurations, we can start making scripts **Ansible **for the **WordPress** installation.
-  
+
   - First, we need to entering the modul2-ansible directory by typing `cd ~/ansible/modul2-ansible` and create **install-wordpress.yml** file by typing `nano install-wordpress.yml`.  In the **install-wordpress.yml** file, we can type some configurations like this.
-  
+
     ![wordpress2](/assets/wordpress2.PNG)
-  
+
   - As we can see in the **install-wordpress.yml** configurations, the roles consist of 1 parts, namely **WordPress**.
-  
+
   - First, we will create **WordPress** role which contains the **php installation**, **php configuration**, **WordPress installation**, and **WordPress configuration** by typing `mkdir -p roles/wordpress`. In the **wordpress** directory, we need to create 3 directories, namely **tasks**, **handlers**, and **templates** by typing the command as below.
-  
+
     ```
     mkdir -p roles/wordpress/tasks
     mkdir -p roles/wordpress/handlers
     mkdir -p roles/wordpress/templates
     ```
-  
+
   - First, go to the **tasks** directory by typing `cd roles/wordpress/tasks` and make **main.yml** file by typing `nano main.yml`. In the **main.yml** file, we can type a script like the one below to **install php**, **php configuration**, **install WordPress**, and **WordPress configuration**.
-  
+
     ```
     ---
     - name: delete apt chache
@@ -811,9 +813,9 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
       notify:
         - restart php
     ```
-  
+
   - We can move from **tasks** directory to **handlers** directory by typing `cd ../handlers` and create **main.yml** file by typing `nano main.yml`. In the **main.yml** file, we can type a script like the one below to restart the php and nginx.
-  
+
     ```
     ---
     - name: restart php
@@ -828,11 +830,11 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
       become_method: su
       action: service name=nginx state=restarted
     ```
-  
+
   - We can move from **handlers** directory to **templates** directory by typing `cd ../templates`. In the **templates** directory, we will make 3 files namely **wp.conf** , **wordpress.conf** and **php7.conf**.
-  
+
   - First, we will create a **wordpress.conf** file by typing `nano wordpress.conf`. In the **wordpress.conf** file, we will create some configuration templates for nginx by typing the script as below.
-  
+
     ```
     server {
          listen 80;
@@ -864,9 +866,9 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
          }
     }
     ```
-  
+
   - After we created **wordpress.conf**, we will also create **wp.conf** file by typing `nano wp.conf`. In the **wp.conf** file, we will create a configuration template to connect **WordPress** to the **database server** by typing the script as below.
-  
+
     ```
     <?php
     /**
@@ -968,9 +970,9 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
     /** Sets up WordPress vars and included files. */
     require_once ABSPATH . 'wp-settings.php';
     ```
-  
+
   - After we created **wp.conf**, we will also create **php7.conf** file by typing `nano php7.conf`. In the **php7.conf** file, we will create a configuration template to replace the configuration of **php7.4** from using **socket** to **port (127.0.0.1:9001)** by typing the script as below.
-  
+
     ```
     ; Start a new pool named 'www'.
     ; the variable $pool can we used in any directive and will be replaced by the
@@ -1357,13 +1359,13 @@ After created CodeIgniter framework with php5.6 and database server in MariaDB w
     ;php_admin_flag[log_errors] = on
     ;php_admin_value[memory_limit] = 32M
     ```
-  
+
   - Finally, after we created all configuration script of **WordPress** we can start to run the **Ansible** to make sure all script that we made was run properly with command `ansible-playbook -i hosts install-wordpress.yml -k`.
-  
+
     ![wp_ansible](/assets/wp_ansible.PNG)
-  
+
   - After the **WordPress** run properly, we can check in the browser by typing our domain which is `vm.local` to check **WordPress** was installed properly.
-  
+
     ![Wordpress](/assets/Wordpress.PNG)
 
 ## Created By Team 12 [IT - 02 - 02]
