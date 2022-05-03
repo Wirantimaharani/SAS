@@ -1,0 +1,212 @@
+ansible tubes 
+hosts 
+[laravel]
+laravel ansible_host=lxc_laravel.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_1L ansible_host=lxc_php7_1L.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_2L ansible_host=lxc_php7_2L.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_4L ansible_host=lxc_php7_4L.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_6L ansible_host=lxc_php7_6L.dev ansible_ssh_user=root ansible_become_pass=akbar
+
+[codeigniter]
+codeigniter ansible_host=lxc_codeigniter.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php5_1 ansible_host=lxc_php5_1.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php5_2 ansible_host=lxc_php5_2.dev ansible_ssh_user=root ansible_become_pass=akbar
+
+[wordpress]
+wordpress ansible_host=lxc_wordpress.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_2W ansible_host=lxc_php7_2W.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_3W ansible_host=lxc_php7_3W.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_4W ansible_host=lxc_php7_4W.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_5W ansible_host=lxc_php7_5W.dev ansible_ssh_user=root ansible_become_pass=akbar
+
+[yii]
+yii ansible_host=lxc_yii.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_1Y ansible_host=lxc_php7_1Y.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_2Y ansible_host=lxc_php7_2Y.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_4Y ansible_host=lxc_php7_4Y.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_5Y ansible_host=lxc_php7_5Y.dev ansible_ssh_user=root ansible_become_pass=akbar
+lxc_php7_6Y ansible_host=lxc_php7_6Y.dev ansible_ssh_user=root ansible_become_pass=akbar
+
+[database]
+lxc_mariadb ansible_host=lxc_mariadb.dev ansible_ssh_user=root ansible_become_pass=akbar
+
+install codeigniter.yml
+  GNU nano 4.8                                                             install-codeigniter.yml                                                                        ---
+- hosts: codeigniter
+  vars:
+    git_url: 'https://github.com/aldonesia/sas-ci'
+    destdir: '/var/www/html/ci'
+    domain: 'lxc_codeigniter.dev'
+  roles:
+    - app
+
+- hosts: lxc_php5_1
+  vars:
+    git_url: 'https://github.com/aldonesia/sas-ci'
+    destdir: '/var/www/html/ci'
+    domain: 'lxc_php5_1.dev'
+  roles:
+    - app
+
+- hosts: lxc_php5_2
+  vars:
+    git_url: 'https://github.com/aldonesia/sas-ci'
+    destdir: '/var/www/html/ci'
+    domain: 'lxc_php5_2.dev'
+  roles:
+    - app
+
+install-laravell.yml
+---
+- hosts: laravel
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_laravel.dev'
+  roles:
+    - php
+    - laravel
+
+- hosts: lxc_php7_1L
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_1L.dev'
+  roles:
+    - php
+    - laravel
+
+- hosts: lxc_php7_2L
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_2L.dev'
+  roles:
+    - php
+    - laravel
+
+- hosts: lxc_php7_4L
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_4L.dev'
+  roles:
+    - php
+    - laravel
+
+- hosts: lxc_php7_6L
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_6L.dev'
+  roles:
+    - php
+    - laravel
+
+install-mariadb.yml
+- hosts: database
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_mariadb.dev'
+  roles:
+    - db
+    - pma
+
+install-wordpress.yml
+---
+- hosts: wordpress
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_wordpress.dev'
+  roles:
+    - wordpress
+
+- hosts: lxc_php7_2W
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_2W.dev'
+  roles:
+    - wordpress
+
+- hosts: lxc_php7_3W
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_3W.dev'
+  roles:
+    - wordpress
+
+- hosts: lxc_php7_4W
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_4W.dev'
+  roles:
+    - wordpress
+
+- hosts: lxc_php7_5W
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_5W.dev'
+  roles:
+    - wordpress
+
+install-yii.yml
+---
+- hosts: yii
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_yii.dev'
+  roles:
+    - php
+    - yii
+
+- hosts: lxc_php7_1Y
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_1Y.dev'
+  roles:
+    - php
+    - yii
+
+- hosts: lxc_php7_2Y
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_2Y.dev'
+  roles:
+    - php
+    - yii
+
+- hosts: lxc_php7_4Y
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_4Y.dev'
+  roles:
+    - php
+    - yii
+
+- hosts: lxc_php7_5Y
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_5Y.dev'
+  roles:
+    - php
+    - yii
+
+- hosts: lxc_php7_6Y
+  vars:
+    username: 'admin'
+    password: 'admin'
+    domain: 'lxc_php7_6Y.dev'
+  roles:
+    - php
+    - yii
